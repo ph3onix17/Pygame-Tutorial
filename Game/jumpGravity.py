@@ -1,4 +1,13 @@
-'''pygame.draw draw rectangles, circles, lines, points, ellipses etc'''
+'''The player character (alien)
+        1. keyboard input
+        2. jump + gravity
+        3. Creating a floor
+        
+        2. Jump + gravity
+            the longer you fall the
+            fasster you fall
+            (exponential)
+'''
 import pygame as pg
 import sys
 
@@ -22,35 +31,36 @@ text_rect = text_surface.get_rect(center=(screen.get_width() // 2, 50))
 alien = pg.image.load('Game/graphics/alien.png').convert_alpha()
 alien = pg.transform.smoothscale(alien,(150,150))
 alien_rect = alien.get_rect(topleft = (100,245))
+alien_gravity = 0
 
 while True:
     for event in pg.event.get():
         if event.type == pg.QUIT:
             pg.quit() 
             sys.exit()
-        # if event.type == pg.MOUSEMOTION:
-        #     if alien_rect.collidepoint(event.pos) : print('collision')
+        #by clicking
+        if event.type == pg.MOUSEBUTTONDOWN:
+            if alien_rect.collidepoint(event.pos): alien_gravity = -20
+        #key up and down
+        if event.type == pg.KEYDOWN:
+            if event.key == pg.K_SPACE:
+                alien_gravity = -20
+        if event.type == pg.KEYUP:
+            print('down')
+        
     
     screen.blit(bg_top,(0,0))
     screen.blit(snail,snail_rect)
     screen.blit(alien,(alien_rect))
-    
-    #pg.draw.rect(screen,'#c0e8ec',text_rect)
-    #pg.draw.rect(screen,'#c0e8ec',text_rect,10,20)
-    #pg.draw.line(screen,'gold',(0,0),pg.mouse.get_pos(),10)
-    #pg.draw.ellipse(screen,'blue', pg.Rect(100,200,200,200)) #pg.Rect(left,top,width,height)
     screen.blit(text_surface,(text_rect))
     
     snail_rect.x -= 4
     if snail_rect.x <= -100: snail_rect.x = 1200
-    #print(alien_rect.colliderect(snail_rect)) # ***
-    # if alien_rect.colliderect(snail_rect):
-    #     print('collision')
     
-    # mouse_pos = pg.mouse.get_pos()
-    # if alien_rect.collidepoint((mouse_pos)):
-    #     print(pg.mouse.get_pressed()) #boolean value of mouse buttons, left scroll right
+    alien_gravity += 1
+    alien_rect.y += alien_gravity
+    screen.blit(alien,alien_rect)
     
     pg.display.update()
-    clock.tick(60)  #cap the frame rate
+    clock.tick(60)
     

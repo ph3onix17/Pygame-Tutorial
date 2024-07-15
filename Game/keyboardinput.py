@@ -1,4 +1,12 @@
-'''pygame.draw draw rectangles, circles, lines, points, ellipses etc'''
+'''The player character (alien)
+        1. keyboard input
+        2. jump + gravity
+        3. Creating a floor
+        
+        1. keyboard input 
+            i   pygame.key
+            ii  event loop
+'''
 import pygame as pg
 import sys
 
@@ -28,29 +36,26 @@ while True:
         if event.type == pg.QUIT:
             pg.quit() 
             sys.exit()
-        # if event.type == pg.MOUSEMOTION:
-        #     if alien_rect.collidepoint(event.pos) : print('collision')
+        #key up and down
+        if event.type == pg.KEYDOWN:
+            if event.key == pg.K_SPACE:
+                print('jump')
+        if event.type == pg.KEYUP:
+            print('down')
+        
     
     screen.blit(bg_top,(0,0))
     screen.blit(snail,snail_rect)
     screen.blit(alien,(alien_rect))
-    
-    #pg.draw.rect(screen,'#c0e8ec',text_rect)
-    #pg.draw.rect(screen,'#c0e8ec',text_rect,10,20)
-    #pg.draw.line(screen,'gold',(0,0),pg.mouse.get_pos(),10)
-    #pg.draw.ellipse(screen,'blue', pg.Rect(100,200,200,200)) #pg.Rect(left,top,width,height)
     screen.blit(text_surface,(text_rect))
     
     snail_rect.x -= 4
     if snail_rect.x <= -100: snail_rect.x = 1200
-    #print(alien_rect.colliderect(snail_rect)) # ***
-    # if alien_rect.colliderect(snail_rect):
-    #     print('collision')
     
-    # mouse_pos = pg.mouse.get_pos()
-    # if alien_rect.collidepoint((mouse_pos)):
-    #     print(pg.mouse.get_pressed()) #boolean value of mouse buttons, left scroll right
+    # keys = pg.key.get_pressed()  # Getting keyboard input
+    # if keys[pg.K_SPACE]:
+    #     print('jump')
     
     pg.display.update()
-    clock.tick(60)  #cap the frame rate
+    clock.tick(60)
     
