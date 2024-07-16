@@ -45,7 +45,6 @@ alien = pg.image.load('Game/graphics/alien.png').convert_alpha()
 alien = pg.transform.smoothscale(alien,(150,150))
 alien_rect = alien.get_rect(topleft = (100,245))
 alien_gravity = 0
-alein_run = 0
 
 #intro screen
 player_stand = pg.image.load('Game/graphics/alien.png').convert_alpha()
@@ -82,11 +81,8 @@ while True:
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_SPACE and alien_rect.bottom == 394:
                     alien_gravity = -22
-            keys = pg.key.get_pressed()
-            if keys[pg.K_w]:
-                    alein_run += 5
-            # if event.type == pg.KEYUP:
-            #     print('down')
+            if event.type == pg.KEYUP:
+                print('down')
         else:
             if event.type == pg.KEYDOWN and event.key == pg.K_r:
                 game_active = True
@@ -109,18 +105,9 @@ while True:
         #alien
         alien_gravity += 1
         alien_rect.y += alien_gravity
-        #alein_run = -1
-        alien_rect.x += alein_run
-        
         if alien_rect.bottom >= 394: 
             alien_rect.bottom = 394
-        if alien_rect.x >= 600: 
-           alien_rect.x = 600
         screen.blit(alien,alien_rect)
-        
-        
-        
-        
         
         #collison
         if snail_rect.colliderect(alien_rect):
@@ -138,8 +125,6 @@ while True:
             screen.blit(text_gameover, text_gameover_rect)
         else:
             screen.blit(score_message, score_message_rect)
-    
-    #print(pg.mouse.get_pos())
     
     pg.display.update()
     clock.tick(60)

@@ -1,9 +1,7 @@
 '''
-    Better enemy spawn logic (with timers)
-
-    1. we create a list of obstacle rectangles
-    2. everytime the timer triggers we add a new rectangle to that list
-    3. we move every rectangle in that list to the left on every frame
+    1. We store the score in a function
+    2. current_time needs to be global or be returned
+    3. place the returned score on a surface and blit it
     
 '''
 import pygame as pg
@@ -35,17 +33,19 @@ snail = pg.transform.smoothscale(snail,(70,70))
 snail = pg.transform.flip(snail, True, False)
 snail_rect = snail.get_rect(bottomright = (800,396))
 
+#text_surface = textF.render('Run Kito', True, (27, 191, 145)) #text info, AA, color
+#text_rect = text_surface.get_rect(center=(screen.get_width() // 2, 50))
+
 text_gameover = text_gameover.render('GAME OVER', True, (27, 191, 145))
 text_gameover_rect = text_gameover.get_rect(center=(screen.get_width() // 2, 50))
 
 text_restart_surface = text_restart.render('PRESS R TO RESTART', True, (27, 191, 145))
-text_restart_rect = text_restart_surface.get_rect(center=(screen.get_width() // 2, 570))
+text_restart_rect = text_restart_surface.get_rect(center=(screen.get_width() // 2, 500))
 
 alien = pg.image.load('Game/graphics/alien.png').convert_alpha()
 alien = pg.transform.smoothscale(alien,(150,150))
 alien_rect = alien.get_rect(topleft = (100,245))
 alien_gravity = 0
-alein_run = 0
 
 #intro screen
 player_stand = pg.image.load('Game/graphics/alien.png').convert_alpha()
@@ -59,13 +59,7 @@ player_stand = pg.transform.smoothscale(player_stand,size=(200,200))
 player_stand_rect = player_stand.get_rect(center = (600,300))
 
 game_name  = textF.render('Run Kito',False,(27, 191, 145))
-game_name_rect = game_name.get_rect(center = (screen.get_width() // 2, screen.get_height() // 2 - 200))
-
-# Timer
-obstacle_timer = pg.USEREVENT + 1
-pg.time.set_timer(obstacle_timer,900)
-
-
+game_name_rect = game_name.get_rect(center = (screen.get_width() // 2, screen.get_height() // 2))
 
 while True:
     for event in pg.event.get():
@@ -82,54 +76,40 @@ while True:
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_SPACE and alien_rect.bottom == 394:
                     alien_gravity = -22
-            keys = pg.key.get_pressed()
-            if keys[pg.K_w]:
-                    alein_run += 5
-            # if event.type == pg.KEYUP:
-            #     print('down')
+            if event.type == pg.KEYUP:
+                print('down')
         else:
             if event.type == pg.KEYDOWN and event.key == pg.K_r:
                 game_active = True
                 snail_rect.left = 1200
                 start_time = pg.time.get_ticks()
-        
-        if event.type == obstacle_timer and game_active:      
-            print("test timer")
+                
         
     if game_active:
         screen.blit(bg_top,(0,0))
-        
+        screen.blit(snail,snail_rect)
         screen.blit(alien,(alien_rect))
+        #screen.blit(text_surface,(text_rect))
         score = display_score()
         
-        # snail_rect.x -= 7
-        # if snail_rect.x <= -100: snail_rect.x = 1200
-        # screen.blit(snail,snail_rect)
+        snail_rect.x -= 7
+        if snail_rect.x <= -100: snail_rect.x = 1200
         
         #alien
         alien_gravity += 1
         alien_rect.y += alien_gravity
-        #alein_run = -1
-        alien_rect.x += alein_run
-        
         if alien_rect.bottom >= 394: 
             alien_rect.bottom = 394
-        if alien_rect.x >= 600: 
-           alien_rect.x = 600
         screen.blit(alien,alien_rect)
-        
-        
-        
-        
         
         #collison
         if snail_rect.colliderect(alien_rect):
             game_active = False
     else:
         screen.fill('#29537d')
-        screen.blit(player_stand,player_stand_rect)
-        screen.blit(text_restart_surface,text_restart_rect)
-        screen.blit(game_name,game_name_rect)
+        #screen.blit(player_stand,player_stand_rect)
+        #screen.blit(text_restart_surface,text_restart_rect)
+        #screen.blit(game_name,game_name_rect)
         
         score_message = textF.render(f'Your score: {score//144}', True, (27, 191, 145))
         score_message_rect = score_message.get_rect(center = (600, 500))
@@ -138,9 +118,8 @@ while True:
             screen.blit(text_gameover, text_gameover_rect)
         else:
             screen.blit(score_message, score_message_rect)
-    
+        
     #print(pg.mouse.get_pos())
-    
     pg.display.update()
     clock.tick(60)
     

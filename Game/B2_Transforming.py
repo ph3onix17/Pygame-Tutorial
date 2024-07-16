@@ -11,7 +11,7 @@ import sys
 
 def display_score():
     current_time = pg.time.get_ticks() - start_time
-    score_surface = textF.render(f'SCORE: {current_time//1000}', True,(0, 150, 98))
+    score_surface = textF.render(f'SCORE: {current_time//144}', True,(0, 150, 98))
     score_rect = score_surface.get_rect(center = (600,50))
     screen.blit(score_surface,score_rect)
 
